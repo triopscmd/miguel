@@ -1,55 +1,35 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+```typescript
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
 
-# Dependency directories
-node_modules/
-jspm_packages/
+// This import path assumes a React component named 'GitIgnoreConfiguration'
+// will eventually be created in a file like `src/components/GitIgnoreConfiguration.tsx`.
+// It is intentionally pointing to a non-existent module to ensure the test fails initially,
+// fulfilling the requirement that the component does not exist yet.
+import GitIgnoreConfiguration from '../src/components/GitIgnoreConfiguration';
 
-# Build artifacts
-dist/
-build/
-.next/ # If using Next.js (common in React ecosystem)
-out/
-public/build/ # For some setups
+describe('GitIgnoreConfiguration', () => {
+  it('should display a warning if "node_modules" is not configured to be ignored', () => {
+    // This test simulates the scenario where the core project setup component
+    // determines that a critical file/directory like `node_modules` is not
+    // properly listed in the project's .gitignore rules.
+    // The component is expected to render a warning message in this state.
+    render(<GitIgnoreConfiguration />);
 
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.*.local
+    // This assertion will fail initially because the `GitIgnoreConfiguration` component
+    // does not exist, or if it did, it wouldn't yet render this specific warning text
+    // without the underlying logic and UI implementation.
+    expect(screen.getByText(/Warning: node_modules is not ignored!/i)).toBeInTheDocument();
+  });
 
-# Editor/IDE specific files
-.vscode/
-.idea/
-*.iml
-.DS_Store
-Thumbs.db
+  it('should display a success message if "node_modules" is correctly configured to be ignored', () => {
+    // This test represents the successful state where the "Core Project Setup and Configuration"
+    // has correctly identified that `node_modules` is being ignored.
+    // The component is expected to render a confirmation message.
+    render(<GitIgnoreConfiguration />);
 
-# Prisma
-# The generated Prisma Client is typically within node_modules,
-# so node_modules/ already covers it.
-# Add any specific database files if used locally (e.g., SQLite)
-*.sqlite
-*.sqlite-journal
-*.db
-
-# Test coverage
-coverage/
-
-# Vitest cache and temporary files
-.vitest-cache/
-.vitest/
-
-# Vercel deployment directory
-.vercel/
-
-# TypeScript build output
-# Typically covered by `dist/` or `build/`, but explicitly for `ts-node` or similar
-*.tsbuildinfo
+    // This assertion will also fail initially as the component does not exist
+    // and therefore cannot render the expected success message.
+    expect(screen.getByText(/node_modules is correctly ignored./i)).toBeInTheDocument();
+  });
+});
