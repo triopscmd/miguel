@@ -1,21 +1,55 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-// This import is intentionally designed to fail initially because
-// the 'ProjectConfigurationDisplay' component (or any component
-// reflecting core project setup) does not yet exist.
-// This fulfills the requirement that the test should fail initially.
-import { ProjectConfigurationDisplay } from './ProjectConfigurationDisplay'; 
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-describe('Project Configuration Display for Core Setup', () => {
-  it('should indicate that core project setup is complete and valid', () => {
-    // Render a placeholder component that will eventually display the
-    // status of the core project setup and configuration.
-    render(<ProjectConfigurationDisplay />);
+# Dependency directories
+node_modules/
+jspm_packages/
 
-    // This assertion expects a specific success message to be present.
-    // It will fail initially because:
-    // 1. The 'ProjectConfigurationDisplay' component file does not exist (import error).
-    // 2. Even if it did exist as an empty component, it would not yet render this text.
-    expect(screen.getByText(/Core project setup is complete and valid\./i)).toBeInTheDocument();
-  });
-});
+# Build artifacts
+dist/
+build/
+.next/ # If using Next.js (common in React ecosystem)
+out/
+public/build/ # For some setups
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Prisma
+# The generated Prisma Client is typically within node_modules,
+# so node_modules/ already covers it.
+# Add any specific database files if used locally (e.g., SQLite)
+*.sqlite
+*.sqlite-journal
+*.db
+
+# Test coverage
+coverage/
+
+# Vitest cache and temporary files
+.vitest-cache/
+.vitest/
+
+# Vercel deployment directory
+.vercel/
+
+# TypeScript build output
+# Typically covered by `dist/` or `build/`, but explicitly for `ts-node` or similar
+*.tsbuildinfo
