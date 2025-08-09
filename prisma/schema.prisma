@@ -1,43 +1,22 @@
-```typescript
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-// This import is expected to fail initially as the component does not exist at this path.
-// It assumes a typical React component for authentication, e.g., a login form.
-import LoginForm from '../../src/components/auth/LoginForm';
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-describe('LoginForm', () => {
-  it('should display an error message on failed login attempt', async () => {
-    // Mock a service that the LoginForm would interact with for login.
-    // This mock is set up to simulate a failed login attempt.
-    const mockLoginService = vi.fn(() => Promise.reject(new Error('Invalid credentials')));
+generator client {
+  provider = "prisma-client-js"
+}
 
-    // Attempt to render the LoginForm component.
-    // This line will fail because `LoginForm` is not yet defined or exported.
-    render(<LoginForm onLogin={mockLoginService} />);
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-    // Simulate user input for username/email and password.
-    // These `getByRole` and `getByLabelText` calls will fail if the component is not rendered
-    // or if the input elements do not exist or have the expected accessible names.
-    const usernameInput = screen.getByRole('textbox', { name: /username|email/i });
-    const passwordInput = screen.getByLabelText(/password/i);
-
-    fireEvent.change(usernameInput, { target: { value: 'test@example.com' } });
-    fireEvent.change(passwordInput, { target: { value: 'incorrectpassword' } });
-
-    // Find and click the submit button.
-    // This `getByRole` call will fail if the button does not exist or have the expected accessible name.
-    const submitButton = screen.getByRole('button', { name: /login|sign in/i });
-    fireEvent.click(submitButton);
-
-    // Wait for and assert that an error message is displayed after the failed attempt.
-    // This `waitFor` and `getByText` will fail if the component does not display
-    // an error message with the expected text after a failed login.
-    await waitFor(() => {
-      expect(screen.getByText(/invalid credentials|login failed/i)).toBeInTheDocument();
-    });
-
-    // Assert that the mock login service was called with the provided credentials.
-    // This expectation will fail if the LoginForm component does not invoke the `onLogin` prop.
-    expect(mockLoginService).toHaveBeenCalledWith('test@example.com', 'incorrectpassword');
-  });
-});
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Add more fields for authentication/authorization as needed, e.g.:
+  // passwordHash String?
+  // roles        String[]
+}
