@@ -1,0 +1,21 @@
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+// This import is intentionally designed to fail initially because
+// the 'ProjectConfigurationDisplay' component (or any component
+// reflecting core project setup) does not yet exist.
+// This fulfills the requirement that the test should fail initially.
+import { ProjectConfigurationDisplay } from './ProjectConfigurationDisplay'; 
+
+describe('Project Configuration Display for Core Setup', () => {
+  it('should indicate that core project setup is complete and valid', () => {
+    // Render a placeholder component that will eventually display the
+    // status of the core project setup and configuration.
+    render(<ProjectConfigurationDisplay />);
+
+    // This assertion expects a specific success message to be present.
+    // It will fail initially because:
+    // 1. The 'ProjectConfigurationDisplay' component file does not exist (import error).
+    // 2. Even if it did exist as an empty component, it would not yet render this text.
+    expect(screen.getByText(/Core project setup is complete and valid\./i)).toBeInTheDocument();
+  });
+});
