@@ -1,48 +1,14 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-// This import will initially fail because the 'UserList' component does not exist.
-// It is assumed that a component named 'UserList' will be created at this path
-// to display data fetched via Prisma ORM, thus fulfilling the feature goal.
-import UserList from '../../src/components/UserList';
+generator client {
+  provider = "prisma-client-js"
+}
 
-// Mock any necessary data fetching or API calls.
-// For a component interacting with Prisma, this would typically involve
-// mocking a custom hook or an API client that fetches data.
-vi.mock('../../src/hooks/useUsers', () => ({
-  useUsers: vi.fn(() => ({
-    data: [
-      { id: 'user-1', name: 'Alice Smith', email: 'alice@example.com' },
-      { id: 'user-2', name: 'Bob Johnson', email: 'bob@example.com' },
-    ],
-    isLoading: false,
-    isError: false,
-    error: null,
-  })),
-}));
-
-describe('UserList', () => {
-  it('should display a list of users fetched from the database', async () => {
-    // This render call will initially fail because the `UserList` component
-    // does not exist at the specified path. Once the component is created,
-    // these assertions will ensure it correctly displays user data.
-    render(<UserList />);
-
-    // Expect to see the names of the mocked users.
-    // These assertions will fail if the component does not render elements
-    // containing 'Alice Smith' and 'Bob Johnson'.
-    await waitFor(() => {
-      expect(screen.getByText('Alice Smith')).toBeInTheDocument();
-    });
-    expect(screen.getByText('Bob Johnson')).toBeInTheDocument();
-
-    // Optionally, verify other user details like emails are present.
-    expect(screen.getByText('alice@example.com')).toBeInTheDocument();
-    expect(screen.getByText('bob@example.com')).toBeInTheDocument();
-
-    // Ensure no loading or error messages are visible after data is loaded.
-    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
-  });
-});
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+  name  String
+}
